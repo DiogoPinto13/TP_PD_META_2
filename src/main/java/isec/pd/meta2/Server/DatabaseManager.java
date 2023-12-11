@@ -139,7 +139,7 @@ public class DatabaseManager {
                 url = url + filePath + "/" + databaseFile;
                 createNewDatabase();
                 createNewTable();
-                fillDatabase1();
+                fillDatabase();
             }
             else
                 url = url + filePath + "/" + databaseFile;

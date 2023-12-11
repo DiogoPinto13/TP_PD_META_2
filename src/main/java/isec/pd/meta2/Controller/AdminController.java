@@ -1,13 +1,12 @@
 package isec.pd.meta2.Controller;
 
-import isec.pd.meta2.Shared.ErrorMessages;
-import isec.pd.meta2.Shared.EventResult;
+import isec.pd.meta2.Server.EventManager;
+import isec.pd.meta2.Shared.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.text.ParseException;
 
 @RestController
 public class AdminController {
@@ -25,15 +24,32 @@ public class AdminController {
     }
 
     @DeleteMapping("/events/delete/{eventDesignation}")
-    public ResponseEntity<String> deleteEvent(){
-
-        return ResponseEntity.ok(ErrorMessages.INVALID_EVENT_NAME.toString());
+    public ResponseEntity<String> deleteEvent(@PathVariable("eventDesignation") String eventDesignation){
+        return ResponseEntity.ok((EventManager.deleteEvent(eventDesignation)) ? Messages.OK.toString() : ErrorMessages.INVALID_EVENT_NAME.toString());
     }
 
     @PostMapping("/events/genCode")
-    public ResponseEntity<String> generatePresenceCode(){
+    public ResponseEntity<String> generatePresenceCode(@RequestParam(value = "args", required = true, defaultValue = "") String args){
 
-        return ResponseEntity.ok(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
+        String[] argsPresence = args.split(",");
+        String[] times = EventManager.getTime(argsPresence[0]).split(",");
+        Time timeBeginEvent = null;
+        Time timeEndEvent = null;
+        try {
+            timeBeginEvent = new Time(times[0]);
+            timeEndEvent = new Time(times[1]);
+        } catch (ParseException e) {
+            System.out.println("Error while parsing the dates of the event! " + e.getMessage());
+        }
+        Time timeAtual = new Time();
+        Event event1 = new Event(argsPresence[0],argsPresence[1],timeBeginEvent,timeEndEvent);
+
+        if(!EventManager.checkIfCodeAlreadyCreated(argsPresence[0]))
+            return ResponseEntity.ok(EventManager.registerPresenceCode(event1, Integer.parseInt(argsPresence[1]), timeAtual));
+        else{
+            int code = EventManager.generateCode();
+            return ResponseEntity.ok((!EventManager.updatePresenceCode(code, Integer.parseInt(argsPresence[1]), argsPresence[0])) ? String.valueOf(code) : ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
+        }
     }
 
     @GetMapping("/events/presences/{eventDesignation}")
