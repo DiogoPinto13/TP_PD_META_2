@@ -25,7 +25,7 @@ public class AdminController {
 
     @DeleteMapping("/events/delete/{eventDesignation}")
     public ResponseEntity<String> deleteEvent(@PathVariable("eventDesignation") String eventDesignation){
-        return ResponseEntity.ok((EventManager.deleteEvent(eventDesignation)) ? Messages.OK.toString() : ErrorMessages.INVALID_EVENT_NAME.toString());
+        return (EventManager.deleteEvent(eventDesignation)) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorMessages.INVALID_EVENT_NAME.toString());
     }
 
     @PostMapping("/events/genCode")
@@ -45,10 +45,10 @@ public class AdminController {
         Event event1 = new Event(argsPresence[0],argsPresence[1],timeBeginEvent,timeEndEvent);
 
         if(!EventManager.checkIfCodeAlreadyCreated(argsPresence[0]))
-            return ResponseEntity.ok(EventManager.registerPresenceCode(event1, Integer.parseInt(argsPresence[1]), timeAtual));
+            return EventManager.registerPresenceCode(event1, Integer.parseInt(argsPresence[1]), timeAtual).equals(Messages.OK.toString()) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.badRequest().body(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
         else{
             int code = EventManager.generateCode();
-            return ResponseEntity.ok((!EventManager.updatePresenceCode(code, Integer.parseInt(argsPresence[1]), argsPresence[0])) ? String.valueOf(code) : ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
+            return (!EventManager.updatePresenceCode(code, Integer.parseInt(argsPresence[1]), argsPresence[0])) ? ResponseEntity.ok(String.valueOf(code)) : ResponseEntity.badRequest().body(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
         }
     }
 

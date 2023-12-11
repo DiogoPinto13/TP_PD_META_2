@@ -110,13 +110,13 @@ SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
 */
 
 public class DatabaseManager {
-    private static String url = "jdbc:sqlite:./";
+    private static final String url = "jdbc:sqlite:./Database/tp.db";
     private static String databaseFile = "tp.db";
 
     public static String getDatabaseFileName() {return databaseFile;}
 
     public static void createNewDatabase() {
-        try (Connection conn = DriverManager.getConnection(url)) {
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url)) {
             if (conn != null) {
                 DatabaseMetaData meta = conn.getMetaData();
                 System.out.println("The driver name is " + meta.getDriverName());
@@ -136,14 +136,14 @@ public class DatabaseManager {
             String filePathDB = "./" + filePath + "/" + databaseFile;
             Path path = Paths.get(filePathDB);
             if(!Files.exists(path)){
-                url = url + filePath + "/" + databaseFile;
+                //DatabaseManager.url = DatabaseManager.url + filePath + "/" + databaseFile;
                 createNewDatabase();
                 createNewTable();
                 fillDatabase();
             }
             else
-                url = url + filePath + "/" + databaseFile;
-            conn = DriverManager.getConnection(url);
+                //DatabaseManager.url = DatabaseManager.url + filePath + "/" + databaseFile;
+            conn = DriverManager.getConnection(DatabaseManager.url);
             conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
             conn.setAutoCommit(true);
             return true;
@@ -198,7 +198,7 @@ public class DatabaseManager {
                 "versao INTEGER NOT NULL\n" +
                 ");";
         String iniciaVersao = "INSERT INTO versao(versao) VALUES(0);";
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             conn.setAutoCommit(true);
             stmt.execute(eventos);
@@ -222,7 +222,7 @@ public class DatabaseManager {
         String codigos_registo = "DROP TABLE IF EXISTS codigos_registo;";
         String eventos_utilizadores = "DROP TABLE IF EXISTS eventos_utilizadores;";
         //eventos, utilizadores, codigos_registo, eventos_utilizadores
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             //stmt.execute("DROP TABLE IF EXISTS warehouses");
             conn.setAutoCommit(true);
@@ -255,7 +255,7 @@ public class DatabaseManager {
 
         //String codeEvent1 = "INSERT INTO codigos_registo (codigo, duracao, idevento, horaRegisto) VALUES(12345, 60, 1, '2021-12-12 12:12:12');";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             conn.setAutoCommit(true);
             stmt.execute(user1);
@@ -277,7 +277,7 @@ public class DatabaseManager {
     public static void fillDatabase1(){
         String user = "INSERT INTO utilizadores (idutilizador, username, password, nome, isAdmin) VALUES ('admin12345', 'admin', 'admin', 'administrator', true);";
 
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             conn.setAutoCommit(true);
             stmt.execute(user);
@@ -286,7 +286,7 @@ public class DatabaseManager {
         }
     }
     public static void testUser(){
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
         Statement stmt = conn.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT password FROM utilizadores")) {
             while(rs.next()){
@@ -307,7 +307,7 @@ public class DatabaseManager {
      * @return ResultSet
      */
     public static synchronized ResultSet executeQuery(String query) throws SQLException {
-        Connection conn = DriverManager.getConnection(url);
+        Connection conn = DriverManager.getConnection(DatabaseManager.url);
         Statement stmt = conn.createStatement();
         return stmt.executeQuery(query);
     }
@@ -318,13 +318,13 @@ public class DatabaseManager {
      * @return Boolean if success
      */
     public static synchronized boolean executeUpdate(String query) {
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             boolean result = stmt.execute(query);
             int rows = stmt.getUpdateCount();
             if(rows > 0 )
                 updateVersion();
-            return result;
+            return rows > 0;
         } catch (SQLException e) {
             System.out.println("error while executing the update: " + e.getMessage());
         }
@@ -335,7 +335,7 @@ public class DatabaseManager {
      * @return if success
      */
     public static synchronized void updateVersion(){
-        try (Connection conn = DriverManager.getConnection(url);
+        try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             stmt.execute("UPDATE versao SET versao = versao + 1 WHERE idversao = 1");
             //UpdateClients.update();
