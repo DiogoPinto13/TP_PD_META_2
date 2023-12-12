@@ -13,14 +13,24 @@ public class AdminController {
 
     @GetMapping("/events?timeBegin=&timeEnd=&eventName=")
     public ResponseEntity<EventResult> getAllEvents(){
+        EventResult eventResult = EventManager.queryEvents(null,null);
 
-        return ResponseEntity.ok(null);
+        return eventResult != null ? ResponseEntity.ok(eventResult) : ResponseEntity.badRequest().body(null);
     }
 
     @PostMapping("/events/newEvent")
-    public ResponseEntity<String> createEvent(){
-
-        return ResponseEntity.ok(ErrorMessages.CREATE_EVENT_FAILED.toString());
+    public ResponseEntity<String> createEvent(@RequestParam(value = "args", required = true, defaultValue = "") String args){
+        String[] arguments = args.split(",");
+        Time timeBegin = null;
+        Time timeEnd = null;
+        try{
+            timeBegin = new Time(arguments[2]);
+            timeEnd = new Time(arguments[3]);
+        }catch (ParseException e){
+            System.out.println("Error while parsing the dates of the event! " + e.getMessage());
+        }
+        Event event = new Event(arguments[0], arguments[1], timeBegin, timeEnd);
+        return (EventManager.createEvent(event)) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.badRequest().body(ErrorMessages.CREATE_EVENT_FAILED.toString());
     }
 
     @DeleteMapping("/events/delete/{eventDesignation}")
@@ -53,9 +63,11 @@ public class AdminController {
     }
 
     @GetMapping("/events/presences/{eventDesignation}")
-    public ResponseEntity<EventResult> getPresencesInEvent(){
+    public ResponseEntity<EventResult> getPresencesInEvent(@RequestParam(value ="args", required = true, defaultValue = " ") String args){
+        String[] argsEvent = args.split(",");
+        EventResult eventResult = EventManager.queryEventsFilterUser(argsEvent[0], argsEvent[1], argsEvent[2]);
 
-        return ResponseEntity.ok(null);
+        return eventResult != null ? ResponseEntity.ok(eventResult) : ResponseEntity.badRequest().body(null);
     }
 
 }
