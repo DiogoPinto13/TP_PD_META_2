@@ -76,6 +76,7 @@ public class UserController {
             } else {
                 eventResult = EventManager.queryEvents(username, null);
             }
+            return eventResult != null ? ResponseEntity.ok(eventResult) : ResponseEntity.badRequest().body(null);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
