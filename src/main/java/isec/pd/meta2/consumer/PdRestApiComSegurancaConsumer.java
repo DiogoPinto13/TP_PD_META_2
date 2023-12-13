@@ -69,18 +69,14 @@ public class PdRestApiComSegurancaConsumer {
 
         System.out.println();
 
-        //Falta um campo "Authorization: basic ..." válido no cabeçalho do pedido para autenticação básica
         String token;
 
-        //OK
-        //token = sendRequestAndShowResponse(loginUri, "POST","basic YWRtaW46YWRtaW4="); //Base64(admin:admin)
+        //login
         String credentials = Base64.getEncoder().encodeToString("admin:admin".getBytes());
         token = sendRequestAndShowResponse(loginUri, "POST","basic "+ credentials, null); //Base64(admin:admin) YWRtaW46YWRtaW4=
-
-        //Língua "gr" não suportada
+        //presenças das aulas
         sendRequestAndShowResponse(helloUri2, "GET", "bearer " + token, null);
-
-        //OK
+        //apagar uma aula
         sendRequestAndShowResponse(helloUri, "DELETE", "bearer " + token, null);
 
     }

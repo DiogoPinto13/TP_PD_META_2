@@ -9,24 +9,45 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 public class AdminController {
 
-    @GetMapping("/events?timeBegin=&timeEnd=&eventName=")
-    public ResponseEntity<EventResult> getAllEvents(@AuthenticationPrincipal Jwt principal){
+    @GetMapping("/events")
+    public ResponseEntity<EventResult> getAllEvents(@AuthenticationPrincipal Jwt principal,
+                                                    @RequestParam(value ="timeBegin", required = false, defaultValue = " ") String timeBegin,
+                                                    @RequestParam(value ="timeEnd", required = false, defaultValue = " ")String timeEnd,
+                                                    @RequestParam(value ="eventDesignation", required = false, defaultValue = " ")String eventDesignation,
+                                                    @RequestParam(value ="place", required = false, defaultValue = " ")String place){
         String role = principal.getClaimAsString("scope");
-
         if(role.equalsIgnoreCase("ADMIN")){
-            EventResult eventResult = EventManager.queryEvents(null,null);
+            EventResult eventResult;
+            ArrayList<Pair<String, String>> parametros = new ArrayList<>();
+            parametros.add(new Pair<>("timeBegin", timeBegin));
+            parametros.add(new Pair<>("timeEnd", timeEnd));
+            parametros.add(new Pair<>("eventDesignation", eventDesignation));
+            parametros.add(new Pair<>("place", place));
 
+            Optional<Pair<String, String>> option = parametros.stream()
+                    .filter(pair -> !" ".equals(pair.second))
+                    .findFirst();
+            if (option.isPresent()) {
+                Pair<String, String> pair = option.get();
+                //nome da opcao, opcao
+                eventResult = EventManager.queryEventsFilters(pair.first, pair.second);
+            } else {
+                eventResult = EventManager.queryEvents(null, null);
+            }
             return eventResult != null ? ResponseEntity.ok(eventResult) : ResponseEntity.badRequest().body(null);
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
 
     @PostMapping("/events/newEvent")
-    public ResponseEntity<String> createEvent(@AuthenticationPrincipal Jwt principal, @RequestParam(value = "args", required = true, defaultValue = "") String args){
+    public ResponseEntity<String> createEvent(@AuthenticationPrincipal Jwt principal,
+                                              @RequestParam(value = "args", required = true, defaultValue = "") String args){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN")){
             String[] arguments = args.split(",");
@@ -45,7 +66,8 @@ public class AdminController {
     }
 
     @DeleteMapping("/events/delete/{eventDesignation}")
-    public ResponseEntity<String> deleteEvent(@AuthenticationPrincipal Jwt principal, @PathVariable("eventDesignation") String eventDesignation){
+    public ResponseEntity<String> deleteEvent(@AuthenticationPrincipal Jwt principal,
+                                              @PathVariable("eventDesignation") String eventDesignation){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN"))
             return (EventManager.deleteEvent(eventDesignation)) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorMessages.INVALID_EVENT_NAME.toString());
@@ -53,7 +75,8 @@ public class AdminController {
     }
 
     @PostMapping("/events/genCode")
-    public ResponseEntity<String> generatePresenceCode(@AuthenticationPrincipal Jwt principal,@RequestParam(value = "args", required = true, defaultValue = "") String args){
+    public ResponseEntity<String> generatePresenceCode(@AuthenticationPrincipal Jwt principal,
+                                                       @RequestParam(value = "args", required = true, defaultValue = "") String args){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN")){
             String[] argsPresence = args.split(",");
@@ -82,7 +105,8 @@ public class AdminController {
     }
 
     @GetMapping("/events/presences/{eventDesignation}")
-    public ResponseEntity<EventResult> getPresencesInEvent(@AuthenticationPrincipal Jwt principal, @PathVariable("eventDesignation") String eventDesignation){
+    public ResponseEntity<EventResult> getPresencesInEvent(@AuthenticationPrincipal Jwt principal,
+                                                           @PathVariable("eventDesignation") String eventDesignation){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN")) {
             eventDesignation = eventDesignation.replace('+', ' ');

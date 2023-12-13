@@ -1,10 +1,8 @@
 package isec.pd.meta2.Controller;
 
 import isec.pd.meta2.Server.EventManager;
-import isec.pd.meta2.Shared.ErrorMessages;
-import isec.pd.meta2.Shared.EventResult;
-import isec.pd.meta2.Shared.Messages;
-import isec.pd.meta2.Shared.Pair;
+import isec.pd.meta2.Server.UserManager;
+import isec.pd.meta2.Shared.*;
 import isec.pd.meta2.security.TokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,15 +27,12 @@ public class UserController {
     }*/
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(){
-
-        return ResponseEntity.ok(ErrorMessages.INVALID_USERNAME.toString());
-    }
-
-    @GetMapping("/isAdmin")
-    public ResponseEntity<Boolean> isAdmin() {
-
-        return ResponseEntity.ok(true);
+    public ResponseEntity<String> register(@RequestParam(value = "name", required=true, defaultValue = "") String name,
+                                           @RequestParam(value = "id", required=true, defaultValue = "") String id,
+                                           @RequestParam(value = "username", required=true, defaultValue = "") String username,
+                                           @RequestParam(value = "password", required=true, defaultValue = "") String password){
+        Register register = new Register(name, id, username, password);
+        return UserManager.registerUser(register) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.badRequest().body(ErrorMessages.INVALID_USER.toString());
     }
 
     @PostMapping("/codEvent")
