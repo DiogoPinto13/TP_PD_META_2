@@ -57,23 +57,23 @@ public class TpPdMeta2Application {
 		{
 			return http
 				.csrf(csrf -> csrf.disable())
-				.securityMatcher("/login", "/register")
+				.securityMatcher("/login")
 				.authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
 				.httpBasic(Customizer.withDefaults())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.build();
 		}
-
+		/*
 		@Bean
 		public SecurityFilterChain unauthenticatedFilterChain(HttpSecurity http) throws Exception
 		{
 			return http
 				.csrf(csrf -> csrf.disable())
-				.securityMatcher("/hello", "/hello/**")
+				.securityMatcher()
 				.authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.build();
-		}
+		}*/
 
 		@Bean
 		public SecurityFilterChain genericFilterChain(HttpSecurity http) throws Exception
