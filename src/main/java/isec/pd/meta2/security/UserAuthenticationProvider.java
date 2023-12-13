@@ -1,5 +1,8 @@
 package isec.pd.meta2.security;
 
+import isec.pd.meta2.Server.UserManager;
+import isec.pd.meta2.Shared.ErrorMessages;
+import isec.pd.meta2.Shared.Login;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -19,9 +22,18 @@ public class UserAuthenticationProvider implements AuthenticationProvider
         String username = authentication.getName();
         String password = authentication.getCredentials().toString();
 
-        if (username.equals("admin") && password.equals("admin")) {
+        Login login = new Login(username, password);
+        ErrorMessages result = UserManager.checkPassword(login);
+
+        if (result.equals(ErrorMessages.LOGIN_ADMIN_USER)) {
             List<GrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority("ADMIN"));
+
+            return new UsernamePasswordAuthenticationToken(username, password, authorities);
+        }
+        else if(result.equals(ErrorMessages.LOGIN_NORMAL_USER)){
+            List<GrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(new SimpleGrantedAuthority("USER"));
 
             return new UsernamePasswordAuthenticationToken(username, password, authorities);
         }
