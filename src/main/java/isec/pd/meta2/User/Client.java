@@ -143,10 +143,10 @@ public class Client {
         Pair<String, Integer> responsePair;
         try{
             Map<String, String> requestData = new HashMap<>();
-            requestData.put("name", "John");
-            requestData.put("id", "123");
-            requestData.put("username", "john_doe");
-            requestData.put("password", "securePassword");
+            requestData.put("name", register.getName());
+            requestData.put("id", register.getId());
+            requestData.put("username", register.getUsername());
+            requestData.put("password", register.getPassword());
             Gson gson = new Gson();
             String requestBody = gson.toJson(requestData);
 
