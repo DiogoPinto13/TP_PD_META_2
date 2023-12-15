@@ -75,4 +75,13 @@ public class UserController {
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body(null);
     }
+
+    @GetMapping("/isAdmin")
+    public ResponseEntity<String> isAdmin(@AuthenticationPrincipal Jwt principal){
+        String role = principal.getClaimAsString("scope");
+        if(role.equalsIgnoreCase("ADMIN")) {
+            return ResponseEntity.ok(ErrorMessages.LOGIN_ADMIN_USER.toString());
+        }
+        return ResponseEntity.ok(ErrorMessages.LOGIN_NORMAL_USER.toString());
+    }
 }

@@ -24,7 +24,6 @@ public class Main extends Application {
         alert.setHeaderText(args[0]);
         alert.setContentText(args[1]);
         alert.showAndWait();
-        Client.closeConnection();
         Platform.exit();
     }
 

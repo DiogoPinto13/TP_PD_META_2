@@ -34,7 +34,7 @@ public class LoginController {
     private Scene scene;
 
     public LoginController(){
-        Client.prepareClient();
+        //Client.prepareClient();
     }
 
     public void initialize() {
@@ -63,15 +63,6 @@ public class LoginController {
         Login login = new Login(user.getText(),pass.getText());
         String retorno = Client.setObjectLogin(login);
 
-        if(Client.getSocket() == null){
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Não existe uma conexão!");
-            alert.setHeaderText(null);
-            alert.setContentText("A conexão ao servidor fechou ou não foi criada!");
-            alert.showAndWait();
-            Platform.exit();
-            return;
-        }
 
         if(retorno.equals(ErrorMessages.LOGIN_NORMAL_USER.toString())){
             Client.setUsername(login.getUsername());
@@ -87,7 +78,7 @@ public class LoginController {
             //Client.closeConnection();
 
             //vamos abrir uma connection especial pro admin
-            Admin.prepareAdmin();
+            //Admin.prepareAdmin();
             Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/beginAdmin.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);

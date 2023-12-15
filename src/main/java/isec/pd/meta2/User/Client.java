@@ -1,16 +1,18 @@
 package isec.pd.meta2.User;
 
+import com.google.gson.Gson;
 import  isec.pd.meta2.Shared.*;
-import javafx.application.Platform;
-import javafx.scene.control.Alert;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.*;
+import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Client {
+    public static String token;
     private static final int timeoutTime = 10;
     private static int port;
     public static void setPort(int newPort){port = newPort;}
@@ -19,14 +21,15 @@ public class Client {
     /**
      * THIS IS EITHER LOGIN OR REGISTER OBJECT
      */
-    private static Object newObject;
+    private static Login login;
+    private static Register register;
 
-    public static String setObjectLogin(Object object){
-        Client.newObject = object;
+    public static String setObjectLogin(Login Login){
+        login = Login;
         return handleLogin();
     }
-    public static boolean setObjectRegister(Object object){
-        Client.newObject = object;
+    public static boolean setObjectRegister(Register Register){
+        register = Register;
         return handleRegister();
     }
 
@@ -37,86 +40,124 @@ public class Client {
         Client.username = username;
     }
     private static String username;
-    private static Socket socket;
-    private static ObjectOutputStream out;
-    private static ObjectInputStream in;
 
-    public static Socket getSocket(){
-        return socket;
-    }
-    public static ObjectOutputStream getOut(){
-        return out;
-    }
-    public static ObjectInputStream getIn(){
-        return in;
+    //HTTP REQUEST FUNCTIONS
+    public static Pair<String, Integer> sendRequestAndShowResponse(String uri, String verb, String authorizationValue, String body) throws MalformedURLException, IOException {
+
+        String responseBody = null;
+        URL url = new URL(uri);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+
+
+        connection.setRequestMethod(verb);
+        connection.setRequestProperty("Accept", "application/xml, */*");
+
+        if(authorizationValue!=null) {
+            connection.setRequestProperty("Authorization", authorizationValue);
+        }
+
+        if(body!=null){
+            connection.setDoOutput(true);
+            connection.setRequestProperty("Content-Type", "Application/Json");
+            connection.getOutputStream().write(body.getBytes());
+        }
+
+        connection.connect();
+
+        int responseCode = connection.getResponseCode();
+        //System.out.println("Response code: " +  responseCode + " (" + connection.getResponseMessage() + ")");
+
+        Scanner s;
+
+        if(connection.getErrorStream()!=null) {
+            s = new Scanner(connection.getErrorStream()).useDelimiter("\\A");
+            responseBody = s.hasNext() ? s.next() : null;
+        }
+
+        try {
+            s = new Scanner(connection.getInputStream()).useDelimiter("\\A");
+            responseBody = s.hasNext() ? s.next() : null;
+        } catch (IOException e){}
+
+        connection.disconnect();
+
+        //System.out.println(verb + " " + uri + (body==null?"":" with body: "+body) + " ==> " + responseBody);
+        //System.out.println();
+
+        Pair<String, Integer> pair = new Pair<>(responseBody, responseCode);
+        return pair;
     }
 
-    public static void closeConnection(){
-        try {
-            out.close();
-            in.close();
-            socket.close();
-        } catch (IOException | NullPointerException ignored) { }
+    private static void getAllEventsWithFilter(String authorizationValue, String filterType, String filterValue) throws IOException {
+        String url = "http://localhost:8080" + "/events";
+
+        // Create the query parameter based on the filter type
+        String queryParams = String.format("?%s=%s", filterType, filterValue);
+
+        // Build the complete URI
+        String fullUrl = url + queryParams;
+
+        // Set up your HTTP request parameters
+        String verb = "GET";
+        String body = null; // No request body for GET requests
+
+        // Send the request and show the response
+        Pair<String, Integer> response = sendRequestAndShowResponse(fullUrl, verb, authorizationValue, body);
+        EventResult eventResult = convertJsonToEventResult(response.first);
+        System.out.println(eventResult.getColumns());
+        // Handle the response as needed
+        //System.out.println("Get All Events Response with " + filterType + ": " + response);
     }
-    public static void prepareClient() {
-        try {
-            socket = new Socket(address, port);
-            socket.setSoTimeout(timeoutTime*1000);
-            in = new ObjectInputStream(socket.getInputStream());
-            out = new ObjectOutputStream(socket.getOutputStream());
-        }
-        catch (SocketTimeoutException e){
-            Main.fatalErrorNotification(Main.requestTimeoutErrorTitle, Main.requestTimeoutErrorDescription);
-        } catch (SocketException e){
-            Main.fatalErrorNotification(Main.noServerErrorTitle, Main.noServerErrorDescription);
-        }
-        catch (Exception e) {
-            System.out.println("exception");
-            closeConnection();
-            e.printStackTrace();
-        }
+    private static EventResult convertJsonToEventResult(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, EventResult.class);
     }
+
 
     public static String handleLogin(){
         String response;
+        Pair<String, Integer> responsePair;
         String input;
         boolean flag;
+        String loginUri = "http://localhost:8080/login";
+        String credentialsToEncode = login.getUsername() + ":" + login.getPassword();
+        String credentials = Base64.getEncoder().encodeToString("admin:admin".getBytes());
         try {
-            out.writeObject(newObject);
-            response = (String) in.readObject();
-            return response;
-        } catch (SocketTimeoutException e){
-            Main.fatalErrorNotification(Main.requestTimeoutErrorTitle, Main.requestTimeoutErrorDescription);
-        } catch (SocketException e){
-            Main.fatalErrorNotification(Main.noServerErrorTitle, Main.noServerErrorDescription);
-        } catch (Exception e){
-            closeConnection();
-            System.out.println("exception");
+            responsePair = sendRequestAndShowResponse(loginUri, "POST","basic "+ credentials, null);
+            token = responsePair.first;
+            response = (responsePair.second) == 401 ? ErrorMessages.INVALID_PASSWORD.toString() : Messages.OK.toString();
+            if(response.equals(Messages.OK.toString())){
+                responsePair = sendRequestAndShowResponse("http://localhost:8080/isAdmin", "GET", "bearer " + token, null);
+                return responsePair.first;
+            }
+            else{
+                return response;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
         return ErrorMessages.INVALID_PASSWORD.toString();
     }
     public static boolean handleRegister(){
         String response;
-        String input;
-        boolean flag;
-        try {
-            out.writeObject(newObject);
-            response = (String) in.readObject();
-            if(response.equals(ErrorMessages.USERNAME_ALREADY_EXISTS.toString())){
-                return false;
-            }
-        } catch (SocketTimeoutException e){
-            Main.fatalErrorNotification(Main.requestTimeoutErrorTitle, Main.requestTimeoutErrorDescription);
-        } catch (SocketException e){
-            Main.fatalErrorNotification(Main.noServerErrorTitle, Main.noServerErrorDescription);
-        } catch (IOException | ClassNotFoundException e) {
-            closeConnection();
-            System.out.println(e.getMessage());
-        }
-        return true;
-    }
+        Pair<String, Integer> responsePair;
+        try{
+            Map<String, String> requestData = new HashMap<>();
+            requestData.put("name", "John");
+            requestData.put("id", "123");
+            requestData.put("username", "john_doe");
+            requestData.put("password", "securePassword");
+            Gson gson = new Gson();
+            String requestBody = gson.toJson(requestData);
 
+            responsePair = sendRequestAndShowResponse("http://localhost:8080/register", "POST","basic "+ "bearer " + token, requestBody);
+            return responsePair.first.equals(Messages.OK.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    /*
     public static String getProfileData(String input){
         Request request = new Request(Messages.REQUEST_EDIT_PROFILE, input);
         try {
@@ -133,7 +174,8 @@ public class Client {
             e.printStackTrace();
         }
         return ErrorMessages.SQL_ERROR.toString();
-    }
+    }*/
+    /*
     public static boolean editProfile(String input){
         Request request = new Request(Messages.EDIT_PROFILE, input);
         try {
@@ -151,7 +193,7 @@ public class Client {
             System.out.println(e.getMessage());
         }
         return true;
-    }
+    }*/
 
     public static boolean sendCode(String code){
 

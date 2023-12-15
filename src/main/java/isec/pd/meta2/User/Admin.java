@@ -18,25 +18,6 @@ public class Admin {
         Admin.username = username;
     }
     private static String username;
-    private static Socket socket;
-    private static ObjectOutputStream out;
-    private static ObjectInputStream in;
-
-    public static void setSocket(Socket s){
-        socket = s;
-    }
-    public static void setIn(ObjectInputStream i){
-        in = i;
-    }
-    public static void setOut(ObjectOutputStream o){
-        out = o;
-    }
-
-    public static void prepareAdmin(){
-        setSocket(Client.getSocket());
-        setIn(Client.getIn());
-        setOut(Client.getOut());
-    }
 
 
     public static String createEvent(String designation, String place, Time timeBeggining, Time timeEnding){
@@ -54,7 +35,7 @@ public class Admin {
             e.printStackTrace();
         }
         return ErrorMessages.SQL_ERROR.toString();
-    }
+    }/*
     public static String editEvent(String designacao, Time hInicio, Time hFim){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(designacao).append(",").append(hInicio.toString()).append(",").append(hFim.toString());
@@ -70,7 +51,7 @@ public class Admin {
             e.printStackTrace();
         }
         return ErrorMessages.SQL_ERROR.toString();
-    }
+    }*/
     public static String deleteEvent(String designacao){
         Request request = new Request(Messages.DELETE_EVENT, designacao);
         try{
@@ -126,7 +107,7 @@ public class Admin {
             e.printStackTrace();
         }
         return null;
-    }
+    }/*
     public static String registerPresence(String eventDesignation, String clientName){
         Request request = new Request(Messages.INSERT_PRESENCES, eventDesignation+","+ clientName);
         try{
@@ -140,7 +121,7 @@ public class Admin {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
     public static String CheckPresences(String designacao) {
         //caso tenha presenças registadas ou não seja possivel encontrar o evento return true
         Request request = new Request(Messages.CHECK_PRESENCES, designacao);
@@ -155,7 +136,7 @@ public class Admin {
             e.printStackTrace();
         }
         return null;
-    }
+    }/*
     public static String GetInfoAboutEvent(String designacao) {
 
         Request request = new Request(Messages.GET_INFO_EVENT, designacao);
@@ -170,15 +151,7 @@ public class Admin {
             e.printStackTrace();
         }
         return null;
-    }
-    public static void closeConnection(){
-        try {
-            out.close();
-            in.close();
-            socket.close();
-        } catch (IOException | NullPointerException ignored) { }
-    }
-
+    }*/
     public static EventResult getPresencesEvent(String designacao) {
         Request request = new Request(Messages.GET_PRESENCES_EVENT, designacao);
         try{
@@ -194,7 +167,7 @@ public class Admin {
         return null;
 
     }
-
+    /*
     public static String EliminatePresenceinEvent(String designacao, String username) {
         Request request = new Request(Messages.DELETE_PRESENCES, designacao+","+ username);
         try{
@@ -208,7 +181,7 @@ public class Admin {
             e.printStackTrace();
         }
         return null;
-    }
+    }*/
 
     public static EventResult getPresencesByUsername(String username){
         Request request = new Request(Messages.GET_PRESENCES, username);
