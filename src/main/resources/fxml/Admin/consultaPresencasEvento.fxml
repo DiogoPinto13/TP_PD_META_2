@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+  Copyright (c) 2015, 2019, Gluon and/or its affiliates.
+  All rights reserved. Use is subject to license terms.
+
+  This file is available and licensed under the following license:
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted provided that the following conditions
+  are met:
+
+  - Redistributions of source code must retain the above copyright
+    notice, this list of conditions and the following disclaimer.
+  - Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions and the following disclaimer in
+    the documentation and/or other materials provided with the distribution.
+  - Neither the name of Oracle Corporation nor the names of its
+    contributors may be used to endorse or promote products derived
+    from this software without specific prior written permission.
+
+  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+-->
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="consultPresences" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="isec.pd.meta2.User.UIControllers.ConsultPresencesUserController">
+  <children>
+    <!--<MenuBar VBox.vgrow="NEVER">
+      <menus>
+        <Menu mnemonicParsing="false" text="Eventos">
+          <items>
+            <MenuItem mnemonicParsing="false" text="Submissão de código" />
+            <MenuItem mnemonicParsing="false" text="Consulta de presenças" />
+          </items>
+        </Menu>
+        <Menu mnemonicParsing="false" text="Gerar código para registo de presenças" />
+        <Menu mnemonicParsing="false" text="Sair">
+          <items>
+            <MenuItem mnemonicParsing="false" text="About MyHelloApp" />
+          </items>
+        </Menu>
+      </menus>
+    </MenuBar>-->
+    <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+      <children>
+        <Label alignment="CENTER" layoutX="155.0" layoutY="177.0" style="&#10;" text="" textAlignment="CENTER" textFill="#9f9f9f" wrapText="false">
+          <font>
+            <Font size="18.0" />
+          </font>
+        </Label>
+            <TableView fx:id="tbpresencas" layoutX="39.0" layoutY="119.0" prefHeight="190.0" prefWidth="562.0">
+              <columns>
+                  <TableColumn fx:id="username" prefWidth="164.66665649414062" text="Número de Identificação" />
+                  <TableColumn fx:id="nome1" prefWidth="188.66668701171875" text="Nome" />
+                  <TableColumn fx:id="hRegisto" prefWidth="207.99993896484375" text="Email" />
+              </columns>
+            </TableView>
+            <Label layoutX="151.0" layoutY="14.0" text="Consulta de presenças no evento">
+               <font>
+                  <Font name="Times New Roman Bold Italic" size="25.0" />
+               </font>
+            </Label>
+            <Button layoutX="515.0" layoutY="335.0" mnemonicParsing="false" onAction="#exportarCSV" text="Exportar CSV">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font></Button>
+            <Label layoutX="39.0" layoutY="54.0" text="Nome:">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="39.0" layoutY="75.0" text="Local:">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Button layoutX="437.0" layoutY="335.0" mnemonicParsing="false" onAction="#eliminarPresenca" text="Eliminar">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Button>
+            <Button layoutX="320.0" layoutY="335.0" mnemonicParsing="false" onAction="#inserirPresenca" text="Inserir presença">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font></Button>
+            <Label fx:id="nome" layoutX="82.0" layoutY="54.0" prefHeight="14.0" prefWidth="201.0" text="..........">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="local" layoutX="82.0" layoutY="75.0" prefHeight="14.0" prefWidth="201.0" text="..........">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Button layoutX="39.0" layoutY="335.0" mnemonicParsing="false" onAction="#Voltar" text="Voltar">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Button>
+            <Label layoutX="304.0" layoutY="58.0" text="Data/Hora Início:">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Label layoutX="304.0" layoutY="79.0" text="Data/Hora Fim:">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="hInicio" layoutX="394.0" layoutY="58.0" prefHeight="14.0" prefWidth="201.0" text="..........">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+            <Label fx:id="hFim" layoutX="394.0" layoutY="79.0" prefHeight="14.0" prefWidth="201.0" text="..........">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </Label>
+      </children>
+    </AnchorPane>
+  </children>
+</VBox>

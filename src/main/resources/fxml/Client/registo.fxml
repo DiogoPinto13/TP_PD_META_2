@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/20.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="isec.pd.meta2.User.UIControllers.RegisterController">
+   <children>
+      <ImageView fitHeight="394.0" fitWidth="592.0" layoutX="5.0" layoutY="3.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+      </ImageView>
+      <Pane layoutX="43.0" layoutY="82.0" prefHeight="237.0" prefWidth="517.0">
+         <children>
+            <TextField fx:id="user" layoutX="79.0" layoutY="96.0" prefHeight="22.0" prefWidth="137.0">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </TextField>
+            <Label layoutX="33.0" layoutY="98.0" prefHeight="17.0" prefWidth="74.0" text="Nome:">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="33.0" layoutY="142.0" prefHeight="17.0" prefWidth="74.0" text="Email:">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="email" accessibleRole="PASSWORD_FIELD" layoutX="79.0" layoutY="140.0" prefHeight="22.0" prefWidth="137.0">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </TextField>
+            <Label layoutX="134.0" layoutY="30.0" text="Registar novo utilizador">
+               <font>
+                  <Font name="Times New Roman Bold Italic" size="25.0" />
+               </font>
+            </Label>
+            <Button fx:id="login" layoutX="219.0" layoutY="192.0" mnemonicParsing="false" onAction="#Register" prefHeight="25.0" prefWidth="79.0" text="Registar" textAlignment="CENTER" />
+            <Label layoutX="237.0" layoutY="98.0" prefHeight="17.0" prefWidth="105.0" text="Nº Identificação:">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Label>
+            <Label layoutX="237.0" layoutY="142.0" prefHeight="17.0" prefWidth="105.0" text="Palavra-passe:">
+               <font>
+                  <Font name="Times New Roman Bold" size="14.0" />
+               </font>
+            </Label>
+            <TextField fx:id="nidentificacao" layoutX="350.0" layoutY="96.0" prefHeight="22.0" prefWidth="137.0">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </TextField>
+            <PasswordField fx:id="pass" layoutX="350.0" layoutY="140.0" prefHeight="22.0" prefWidth="137.0">
+               <font>
+                  <Font name="Times New Roman" size="12.0" />
+               </font>
+            </PasswordField>
+            <Hyperlink fx:id="backLogin" onAction="#backLogin" layoutX="14.0" layoutY="206.0" text="Voltar ao login" />
+         </children>
+      </Pane>
+   </children>
+</Pane>
