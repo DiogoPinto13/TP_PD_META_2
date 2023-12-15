@@ -247,7 +247,7 @@ public class DatabaseManager {
 
         String event1 = "INSERT INTO eventos (designacao, place, horaInicio, horaFim) VALUES ('Aula PD T1', 'ISEC', '2019-12-12 12:12:12', '2019-12-12 14:12:12');";
         String event2 = "INSERT INTO eventos (designacao, place, horaInicio, horaFim) VALUES ('Aula PD P1', 'ISEC', '2021-12-12 12:12:12', '2021-12-12 15:12:12');";
-        String event3 = "INSERT INTO eventos(designacao, place, horaInicio, horaFim) VALUES ('Aula ED T1', 'ISEC', '2021-12-12 12:12:12', '2021-12-12 14:12:12');";
+        String event3 = "INSERT INTO eventos(designacao, place, horaInicio, horaFim) VALUES ('Aula ED T1', 'DEIS', '2021-12-12 12:12:12', '2021-12-12 14:12:12');";
 
         String relation1 = "INSERT INTO eventos_utilizadores (idevento, username) VALUES (1, 'a2020133653@isec.pt');";
         String relation2 = "INSERT INTO eventos_utilizadores (idevento, username) VALUES (2, 'a2020133653@isec.pt');";
