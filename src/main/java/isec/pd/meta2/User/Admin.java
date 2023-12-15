@@ -1,5 +1,6 @@
 package isec.pd.meta2.User;
 
+import com.google.gson.Gson;
 import isec.pd.meta2.Shared.*;
 
 import java.io.IOException;
@@ -8,6 +9,11 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static isec.pd.meta2.User.Client.sendRequestAndShowResponse;
+import static isec.pd.meta2.User.Client.token;
 
 public class Admin {
 
@@ -20,22 +26,26 @@ public class Admin {
     private static String username;
 
 
-    public static String createEvent(String designation, String place, Time timeBeggining, Time timeEnding){
+    public static String createEvent(String designation, String place, Time timeBeggining, Time timeEnding) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(designation).append(",").append(place).append(",").append(timeBeggining.toString()).append(",").append(timeEnding.toString());
-        Request request = new Request(Messages.CREATE_EVENT, stringBuilder.toString());
+
+        EventResult eventResult;
+
+        Map<String, String> requestData = new HashMap<>();
+        requestData.put("args", stringBuilder.toString());
+        Gson gson = new Gson();
+        String requestBody = gson.toJson(requestData);
+
         try {
-            out.writeObject(request);
-            return (String) in.readObject();
-        } catch (SocketTimeoutException e){
-            Main.fatalErrorNotification(Main.requestTimeoutErrorTitle, Main.requestTimeoutErrorDescription);
-        } catch (SocketException e){
-            Main.fatalErrorNotification(Main.noServerErrorTitle, Main.noServerErrorDescription);
-        } catch (IOException | ClassNotFoundException e) {
+            return sendRequestAndShowResponse("http://localhost:8080/events", "GET", "basic " + "bearer " + token, requestBody).first;
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return ErrorMessages.SQL_ERROR.toString();
-    }/*
+        return null;
+    }
+
+/*
     public static String editEvent(String designacao, Time hInicio, Time hFim){
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(designacao).append(",").append(hInicio.toString()).append(",").append(hFim.toString());

@@ -100,27 +100,6 @@ public class Client {
         return pair;
     }
 
-    private static void getAllEventsWithFilter(String authorizationValue, String filterType, String filterValue) throws IOException {
-        String url = "http://localhost:8080" + "/events";
-
-        // Create the query parameter based on the filter type
-        String queryParams = String.format("?%s=%s", filterType, filterValue);
-
-        // Build the complete URI
-        String fullUrl = url + queryParams;
-
-        // Set up your HTTP request parameters
-        String verb = "GET";
-        String body = null; // No request body for GET requests
-
-        // Send the request and show the response
-        Pair<String, Integer> response = sendRequestAndShowResponse(fullUrl, verb, authorizationValue, body);
-        EventResult eventResult = convertJsonToEventResult(response.first);
-        System.out.println(eventResult.getColumns());
-        // Handle the response as needed
-        //System.out.println("Get All Events Response with " + filterType + ": " + response);
-    }
-
     private static EventResult convertJsonToEventResult(String json) {
         Gson gson = new Gson();
         return gson.fromJson(json, EventResult.class);
@@ -163,7 +142,7 @@ public class Client {
             Gson gson = new Gson();
             String requestBody = gson.toJson(requestData);
 
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/register", "POST", "basic " + "bearer " + token, requestBody);
+            responsePair = sendRequestAndShowResponse("http://localhost:8080/register", "POST", null, requestBody);
             return responsePair.first.equals(Messages.OK.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -235,7 +214,7 @@ public class Client {
         String requestBody = gson.toJson(requestData);
 
         try {
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/codEvent", "POST", "basic " + "bearer " + token, requestBody);
+            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "basic " + "bearer " + token, requestBody);
             eventResult = gson.fromJson(responsePair.first, EventResult.class);
             return eventResult;
         } catch (IOException e) {
@@ -255,7 +234,7 @@ public class Client {
         String requestBody = gson.toJson(requestData);
 
         try {
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/codEvent", "POST", "basic " + "bearer " + token, requestBody);
+            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "basic " + "bearer " + token, requestBody);
             eventResult = gson.fromJson(responsePair.first, EventResult.class);
             return eventResult;
         } catch (IOException e) {
