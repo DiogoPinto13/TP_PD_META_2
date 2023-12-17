@@ -147,13 +147,13 @@ public class Client {
         String response;
         Pair<String, Integer> responsePair;
         try {
-            Map<String, String> requestData = new HashMap<>();
-            requestData.put("name", register.getName());
-            requestData.put("id", register.getId());
-            requestData.put("username", register.getUsername());
-            requestData.put("password", register.getPassword());
+            //Map<String, String> requestData = new HashMap<>();
+            //requestData.put("name", register.getName());
+            //requestData.put("id", register.getId());
+            //requestData.put("username", register.getUsername());
+            //requestData.put("password", register.getPassword());
             Gson gson = new Gson();
-            String requestBody = gson.toJson(requestData);
+            String requestBody = gson.toJson(register);
 
             responsePair = sendRequestAndShowResponse("http://localhost:8080/register", "POST", null, requestBody);
             return responsePair.first.equals(Messages.OK.toString());
