@@ -68,6 +68,7 @@ public class AdminController {
     @DeleteMapping("/events/delete/{eventDesignation}")
     public ResponseEntity<String> deleteEvent(@AuthenticationPrincipal Jwt principal,
                                               @PathVariable("eventDesignation") String eventDesignation){
+        eventDesignation = eventDesignation.replace('+', ' ');
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN"))
             return (EventManager.deleteEvent(eventDesignation)) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.status(HttpStatus.NOT_FOUND).body(ErrorMessages.INVALID_EVENT_NAME.toString());

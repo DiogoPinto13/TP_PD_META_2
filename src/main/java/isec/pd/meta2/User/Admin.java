@@ -62,6 +62,7 @@ public class Admin {
         return ErrorMessages.SQL_ERROR.toString();
     }*/
     public static String deleteEvent(String designacao){
+        designacao = designacao.replace(' ', '+');
         String uri = "http://localhost:8080/events/delete/" + designacao;
         try {
             return sendRequestAndShowResponse(uri, "DELETE", "bearer " + token, null).first;
