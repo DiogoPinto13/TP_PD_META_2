@@ -1,5 +1,7 @@
 package isec.pd.meta2.Server;
 
+import isec.pd.meta2.Server.RMI.RmiServerService;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -338,6 +340,7 @@ public class DatabaseManager {
         try (Connection conn = DriverManager.getConnection(DatabaseManager.url);
              Statement stmt = conn.createStatement()) {
             stmt.execute("UPDATE versao SET versao = versao + 1 WHERE idversao = 1");
+            RmiServerService.updateServerBackupDatabases(getDatabaseVersion());
             //UpdateClients.update();
         } catch (SQLException e) {
             System.out.println("error while executing the update: " + e.getMessage());
