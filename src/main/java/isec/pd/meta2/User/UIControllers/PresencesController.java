@@ -53,7 +53,7 @@ public class PresencesController {
         CBFiltros.setItems(options);
         CBFiltros.getSelectionModel().selectLast();
 
-        Image imageDecline = new Image(getClass().getResourceAsStream("resources/lupa2.gif"));
+        Image imageDecline = new Image(getClass().getResourceAsStream("/fxml/lupa2.gif"));
         ImageView visualizadorImagem = new ImageView(imageDecline);
         visualizadorImagem.setFitWidth(20);
         visualizadorImagem.setFitHeight(15);

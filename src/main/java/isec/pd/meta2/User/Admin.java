@@ -37,7 +37,7 @@ public class Admin {
         String requestBody = gson.toJson(requestData);
 
         try {
-            return sendRequestAndShowResponse("http://localhost:8080/events/newEvent", "POST", "basic " + "bearer " + token, requestBody).first;
+            return sendRequestAndShowResponse("http://localhost:8080/events/newEvent", "POST", "bearer " + token, requestBody).first;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -64,7 +64,7 @@ public class Admin {
     public static String deleteEvent(String designacao){
         String uri = "http://localhost:8080/events/delete/" + designacao;
         try {
-            return sendRequestAndShowResponse(uri, "DELETE", "basic " + "bearer " + token, null).first;
+            return sendRequestAndShowResponse(uri, "DELETE", "bearer " + token, null).first;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -90,7 +90,7 @@ public class Admin {
         String requestBody = gson.toJson(requestData);
 
         try {
-            return sendRequestAndShowResponse("http://localhost:8080/events/genCode", "POST", "basic " + "bearer " + token, requestBody).first;
+            return sendRequestAndShowResponse("http://localhost:8080/events/genCode", "POST",   "bearer " + token, requestBody).first;
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,7 +166,7 @@ public class Admin {
         EventResult eventResult;
         Gson gson = new Gson();
         try {
-            String body = sendRequestAndShowResponse(uri, "GET", "basic " + "bearer " + token, null).first;
+            String body = sendRequestAndShowResponse(uri, "GET", "bearer " + token, null).first;
             eventResult = gson.fromJson(body, EventResult.class);
             return eventResult;
         } catch (IOException e) {

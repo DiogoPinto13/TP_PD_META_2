@@ -113,7 +113,7 @@ public class Client {
         boolean flag;
         String loginUri = "http://localhost:8080/login";
         String credentialsToEncode = login.getUsername() + ":" + login.getPassword();
-        String credentials = Base64.getEncoder().encodeToString("admin:admin".getBytes());
+        String credentials = Base64.getEncoder().encodeToString(credentialsToEncode.getBytes());
         try {
             responsePair = sendRequestAndShowResponse(loginUri, "POST", "basic " + credentials, null);
             token = responsePair.first;
@@ -197,7 +197,7 @@ public class Client {
         String requestBody = gson.toJson(requestData);
 
         try {
-            return sendRequestAndShowResponse("http://localhost:8080/codEvent", "POST", "basic " + "bearer " + token, requestBody).first.equals(Messages.REGISTER_PRESENCE_CODE.toString());
+            return sendRequestAndShowResponse("http://localhost:8080/codEvent", "POST", "bearer " + token, requestBody).first.equals(Messages.REGISTER_PRESENCE_CODE.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -214,7 +214,7 @@ public class Client {
         String requestBody = gson.toJson(requestData);
 
         try {
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "basic " + "bearer " + token, requestBody);
+            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "bearer " + token, requestBody);
             eventResult = gson.fromJson(responsePair.first, EventResult.class);
             return eventResult;
         } catch (IOException e) {
@@ -234,7 +234,7 @@ public class Client {
         String requestBody = gson.toJson(requestData);
 
         try {
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "basic " + "bearer " + token, requestBody);
+            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "bearer " + token, requestBody);
             eventResult = gson.fromJson(responsePair.first, EventResult.class);
             return eventResult;
         } catch (IOException e) {

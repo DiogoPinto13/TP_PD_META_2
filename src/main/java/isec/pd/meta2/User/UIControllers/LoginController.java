@@ -62,7 +62,7 @@ public class LoginController {
 
         if(retorno.equals(ErrorMessages.LOGIN_NORMAL_USER.toString())){
             Client.setUsername(login.getUsername());
-            Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Client/beginClient.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Client/beginClient.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
