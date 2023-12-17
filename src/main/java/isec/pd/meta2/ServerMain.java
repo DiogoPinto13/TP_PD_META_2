@@ -305,7 +305,7 @@ public class ServerMain {
         WaitClient waitClient = new WaitClient(Integer.parseInt(args[0]), serverVariable);
         waitClient.start();
 
-        ConfigurableApplicationContext restServer = SpringApplication.run(TpPdMeta2Application.class);
+        ConfigurableApplicationContext restServer = SpringApplication.run(RestServer.class);
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome!");
         while(!scanner.next().equalsIgnoreCase("exit") && restServer.isActive());

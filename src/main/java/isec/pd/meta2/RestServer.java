@@ -1,15 +1,12 @@
 package isec.pd.meta2;
 
-import com.nimbusds.jose.crypto.impl.HMAC;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
-import isec.pd.meta2.Server.RMI.RmiManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 import org.springframework.context.annotation.Bean;
@@ -25,21 +22,16 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import isec.pd.meta2.Server.DatabaseManager;
 import isec.pd.meta2.security.RsaKeysProperties;
 import isec.pd.meta2.security.UserAuthenticationProvider;
 
-import java.io.File;
-import java.net.SocketException;
-import java.rmi.RemoteException;
-
 @SpringBootApplication
 @ConfigurationPropertiesScan
-public class TpPdMeta2Application {
+public class RestServer {
 
 	private final RsaKeysProperties rsaKeys;
 
-	public TpPdMeta2Application(RsaKeysProperties rsaKeys)
+	public RestServer(RsaKeysProperties rsaKeys)
 	{
 		this.rsaKeys = rsaKeys;
 	}
