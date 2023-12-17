@@ -125,7 +125,7 @@ public class PresencesController {
             if(!filtro.getText().equals("")) {
                 if (selectedType.equals("Designação")) {
                     dataEventos.clear();
-                    EventResult eventResult = Client.queryEvents("designacao", filtro.getText(), Client.getUsername());
+                    EventResult eventResult = Client.queryEvents("eventDesignation", filtro.getText(), Client.getUsername());
                     preencheTabela(eventResult);
                 } else if (selectedType.equals("Local")) {
                     dataEventos.clear();
@@ -133,11 +133,11 @@ public class PresencesController {
                     preencheTabela(eventResult);
                 } else if (selectedType.equals("Inicio")) {
                     dataEventos.clear();
-                    EventResult eventResult = Client.queryEvents("horaInicio", filtro.getText(), Client.getUsername());
+                    EventResult eventResult = Client.queryEvents("timeBegin", filtro.getText(), Client.getUsername());
                     preencheTabela(eventResult);
                 } else if (selectedType.equals("Fim")) {
                     dataEventos.clear();
-                    EventResult eventResult = Client.queryEvents("horaFim", filtro.getText(), Client.getUsername());
+                    EventResult eventResult = Client.queryEvents("timeEnd", filtro.getText(), Client.getUsername());
                     preencheTabela(eventResult);
                 }
             }

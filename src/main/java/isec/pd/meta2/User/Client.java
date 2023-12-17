@@ -222,16 +222,18 @@ public class Client {
     }
 
     public static EventResult getPresences(String input) {
+        String url = "http://localhost:8080/presences/" + input;
 
         Pair<String, Integer> responsePair;
         EventResult eventResult;
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put("username", input);
+        //Map<String, String> requestData = new HashMap<>();
+        //requestData.put("username", input);
+
         Gson gson = new Gson();
-        String requestBody = gson.toJson(requestData);
+        //String requestBody = gson.toJson(input).replace("\"", "");
 
         try {
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "bearer " + token, requestBody);
+            responsePair = sendRequestAndShowResponse(url, "GET", "bearer " + token, null);
             eventResult = gson.fromJson(responsePair.first, EventResult.class);
             return eventResult;
         } catch (IOException e) {
@@ -241,19 +243,14 @@ public class Client {
     }
 
     public static EventResult queryEvents(String column, String text, String username) {
-        Pair<String, Integer> responsePair;
-        EventResult eventResult;
+        String url = "http://localhost:8080/presences/" + username;
 
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put(column, text);
-        requestData.put("username", username);
-        Gson gson = new Gson();
-        String requestBody = gson.toJson(requestData);
+        //Gson gson = new Gson();
+        //String requestBody = gson.toJson(args).replace("\"", "");
 
         try {
-            responsePair = sendRequestAndShowResponse("http://localhost:8080/presences", "GET", "bearer " + token, requestBody);
-            eventResult = gson.fromJson(responsePair.first, EventResult.class);
-            return eventResult;
+            return getAllEventsWithFilter(url,  "bearer " + token, column, text);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

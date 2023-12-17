@@ -43,20 +43,20 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied!");
     }
 
-    @GetMapping("/presences")
+    @GetMapping("/presences/{username}")
     public ResponseEntity<EventResult> getPresencesByUsername(@AuthenticationPrincipal Jwt principal,
+                                                              @PathVariable String username,
                                                               @RequestParam(value ="timeBegin", required = false, defaultValue = " ") String timeBegin,
                                                               @RequestParam(value ="timeEnd", required = false, defaultValue = " ")String timeEnd,
                                                               @RequestParam(value ="eventDesignation", required = false, defaultValue = " ")String eventDesignation,
-                                                              @RequestParam(value ="place", required = false, defaultValue = " ")String place,
-                                                              @RequestParam(value ="username", required = true, defaultValue = "")String username){
+                                                              @RequestParam(value ="place", required = false, defaultValue = " ")String place){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("USER")) {
             EventResult eventResult;
             ArrayList<Pair<String, String>> parametros = new ArrayList<>();
-            parametros.add(new Pair<>("timeBegin", timeBegin));
-            parametros.add(new Pair<>("timeEnd", timeEnd));
-            parametros.add(new Pair<>("eventDesignation", eventDesignation));
+            parametros.add(new Pair<>("horaInicio", timeBegin));
+            parametros.add(new Pair<>("horaFim", timeEnd));
+            parametros.add(new Pair<>("designacao", eventDesignation));
             parametros.add(new Pair<>("place", place));
 
             Optional<Pair<String, String>> option = parametros.stream()
@@ -66,7 +66,15 @@ public class UserController {
                 Pair<String, String> pair = option.get();
                 eventResult = EventManager.queryEventsFilterUser(pair.first, pair.second, username);
             } else {
-                eventResult = EventManager.queryEvents(username, null);
+                ArrayList<Integer> idsUser = EventManager.getIdsEventsByUsername(username);
+                String filter = null;
+                EventResult eventResultEvents = new EventResult(" ");
+                eventResultEvents.setColumns(" ");
+                if(idsUser.size() == 0){
+                    return ResponseEntity.badRequest().body(null);
+                }
+                filter = EventManager.createFilterOr(idsUser);
+                eventResult = EventManager.queryEvents(username, filter);
             }
             return eventResult != null ? ResponseEntity.ok(eventResult) : ResponseEntity.badRequest().body(null);
         }
