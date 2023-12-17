@@ -29,11 +29,13 @@ public class Admin {
     public static String createEvent(String designation, String place, Time timeBeggining, Time timeEnding) {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(designation).append(",").append(place).append(",").append(timeBeggining.toString()).append(",").append(timeEnding.toString());
+        String args = stringBuilder.toString();
+        //args.replace(' ', '+');
 
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put("args", stringBuilder.toString());
+        //Map<String, String> requestData = new HashMap<>();
+        //requestData.put("args", args);
         Gson gson = new Gson();
-        String requestBody = gson.toJson(requestData);
+        String requestBody = gson.toJson(args).replace("\"", "");
 
         try {
             return sendRequestAndShowResponse("http://localhost:8080/events/newEvent", "POST", "bearer " + token, requestBody).first;
@@ -83,11 +85,14 @@ public class Admin {
         return null;
     }
     public static String generatePresenceCode(String code, int duracao){
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(code).append(",").append(duracao);
+        String args = stringBuilder.toString();
 
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put("args", code + "," + duracao);
+        //Map<String, String> requestData = new HashMap<>();
+        //requestData.put("args", code + "," + duracao);
         Gson gson = new Gson();
-        String requestBody = gson.toJson(requestData);
+        String requestBody = gson.toJson(args).replace("\"", "");
 
         try {
             return sendRequestAndShowResponse("http://localhost:8080/events/genCode", "POST",   "bearer " + token, requestBody).first;

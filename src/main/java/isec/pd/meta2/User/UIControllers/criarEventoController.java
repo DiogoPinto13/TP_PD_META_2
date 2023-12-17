@@ -55,7 +55,7 @@ public class criarEventoController {
             alert.showAndWait();
         }
         else{
-            if(Admin.createEvent(nome.getText(), local.getText(), new Time(ano,mes,dia, horaInicio.getValue(), minutosInicio.getValue()), new Time(ano,mes,dia, horaFim.getValue(), minutosFim.getValue())).equals(Messages.OK.toString())){
+            if(!Admin.createEvent(nome.getText(), local.getText(), new Time(ano,mes,dia, horaInicio.getValue(), minutosInicio.getValue()), new Time(ano,mes,dia, horaFim.getValue(), minutosFim.getValue())).equals(Messages.OK.toString())){
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Erro");
                 alert.setHeaderText(null);

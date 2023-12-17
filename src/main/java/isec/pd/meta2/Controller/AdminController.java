@@ -48,7 +48,7 @@ public class AdminController {
 
     @PostMapping("/events/newEvent")
     public ResponseEntity<String> createEvent(@AuthenticationPrincipal Jwt principal,
-                                              @RequestParam(value = "args", required = true, defaultValue = "") String args){
+                                              @RequestBody String args){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN")){
             String[] arguments = args.split(",");
@@ -78,7 +78,7 @@ public class AdminController {
 
     @PostMapping("/events/genCode")
     public ResponseEntity<String> generatePresenceCode(@AuthenticationPrincipal Jwt principal,
-                                                       @RequestParam(value = "args", required = true, defaultValue = "") String args){
+                                                       @RequestBody String args){
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("ADMIN")){
             String[] argsPresence = args.split(",");
