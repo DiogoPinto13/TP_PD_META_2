@@ -4,12 +4,16 @@ import isec.pd.meta2.Server.DatabaseManager;
 import isec.pd.meta2.Server.EventManager;
 import isec.pd.meta2.Server.UserManager;
 import isec.pd.meta2.Shared.*;
+import isec.pd.meta2.Server.RMI.RmiManager;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
+import java.rmi.RemoteException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -249,12 +253,10 @@ class ClientHandler extends Thread{
             }
         }
     }
-
-
 }
 
 
-public class Main {
+public class ServerMain {
     public static void main(String[] args) {
         if(args.length != 4){
             System.out.println("Wrong syntax! java Main port DatabaseLocation RMIServiceName RMIPort");
@@ -283,20 +285,36 @@ public class Main {
         }
         System.out.println("Connection to SQLite has been established.");
 
-        //RmiManager rmiManager;
+        RmiManager rmiManager;
         AtomicBoolean serverVariable = new AtomicBoolean(true);
+        try {
+            rmiManager = new RmiManager(args[2], databaseDirectory, Integer.parseInt(args[3]), serverVariable);
+            if(!rmiManager.registerService())
+                throw new RemoteException();
+            System.out.println("RMI Service is Online!");
+        }catch (RemoteException e) {
+            System.out.println("Error while creating the RMI manager: " + e);
+            System.exit(1);
+            return;
+        } catch (SocketException e) {
+            System.out.println("Error while connecting socket to Multicast Group." + e);
+            System.exit(1);
+            return;
+        }
 
         WaitClient waitClient = new WaitClient(Integer.parseInt(args[0]), serverVariable);
         waitClient.start();
 
+        ConfigurableApplicationContext restServer = SpringApplication.run(TpPdMeta2Application.class);
         Scanner scanner = new Scanner(System.in);
         System.out.println("Welcome!");
-        while(!scanner.next().equalsIgnoreCase("exit"));
+        while(!scanner.next().equalsIgnoreCase("exit") && restServer.isActive());
         System.out.println("Closing Server.");
         serverVariable.set(false);
         try {
+            restServer.close();
             waitClient.join();
-            //rmiManager.getRmiHeartBeatThread().join();
+            rmiManager.getRmiHeartBeatThread().join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -7,6 +7,7 @@ import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import isec.pd.meta2.Server.RMI.RmiManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,6 +28,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import isec.pd.meta2.Server.DatabaseManager;
 import isec.pd.meta2.security.RsaKeysProperties;
 import isec.pd.meta2.security.UserAuthenticationProvider;
+
+import java.io.File;
+import java.net.SocketException;
+import java.rmi.RemoteException;
 
 @SpringBootApplication
 @ConfigurationPropertiesScan
@@ -100,9 +105,58 @@ public class TpPdMeta2Application {
 	{
 		return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
 	}
-	public static void main(String[] args) {
-		DatabaseManager.connect("Database");
-		SpringApplication.run(TpPdMeta2Application.class, args);
-	}
+	/*public static void main(String[] args) {
+		if(args.length != 4){
+			System.out.println("Wrong syntax! java Main port DatabaseLocation RMIServiceName RMIPort");
+			return;
+		}
+
+		File databaseDirectory = new File(args[1].trim());
+
+		if(!databaseDirectory.exists()){
+			System.out.println("A directoria " + databaseDirectory + " nao existe!");
+			return;
+		}
+
+		if(!databaseDirectory.isDirectory()){
+			System.out.println("O caminho " + databaseDirectory + " nao se refere a uma diretoria!");
+			return;
+		}
+
+		if(!databaseDirectory.canWrite()){
+			System.out.println("Sem permissoes de escrever na diretoria " + databaseDirectory + "!");
+			return;
+		}
+		if(!DatabaseManager.connect(args[1])){
+			System.out.println("Error while connecting to the Database.");
+			return;
+		}
+		System.out.println("Connection to SQLite has been established.");
+		ServerMain serverMain = new ServerMain(args);
+		RmiManager rmiManager;
+		try {
+			rmiManager = new RmiManager(args[2], databaseDirectory, Integer.parseInt(args[3]), serverMain.getServerVariable());
+			if(!rmiManager.registerService())
+				throw new RemoteException();
+			System.out.println("RMI Service is Online!");
+		}catch (RemoteException e) {
+			System.out.println("Error while creating the RMI manager: " + e);
+			System.exit(1);
+			return;
+		} catch (SocketException e) {
+			System.out.println("Error while connecting socket to Multicast Group." + e);
+			System.exit(1);
+			return;
+		}
+		serverMain.start();
+
+		//DatabaseManager.connect("Database");
+		SpringApplication.run(TpPdMeta2Application.class);
+		try{
+			serverMain.join();
+			rmiManager.getRmiHeartBeatThread().join();
+		}
+		catch (InterruptedException ignored){}
+	}*/
 
 }
