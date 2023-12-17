@@ -96,11 +96,11 @@ public class AdminController {
 
             if(!EventManager.checkIfCodeAlreadyCreated(argsPresence[0])){
                 String code = EventManager.registerPresenceCode(event1, Integer.parseInt(argsPresence[1]), timeAtual);
-                return (!code.equals(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString())) ? ResponseEntity.ok(code) : ResponseEntity.badRequest().body(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
+                return (!code.equals(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString())) ? ResponseEntity.ok(code) : ResponseEntity.badRequest().body(code);
             }
             else{
                 int code = EventManager.generateCode();
-                return (!EventManager.updatePresenceCode(code, Integer.parseInt(argsPresence[1]), argsPresence[0])) ? ResponseEntity.ok(String.valueOf(code)) : ResponseEntity.badRequest().body(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
+                return (!EventManager.updatePresenceCode(code, Integer.parseInt(argsPresence[1]), argsPresence[0])) ? ResponseEntity.ok(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString()) : ResponseEntity.badRequest().body(String.valueOf(code));
             }
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied!");
