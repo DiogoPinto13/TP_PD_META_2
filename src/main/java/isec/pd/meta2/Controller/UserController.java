@@ -24,11 +24,8 @@ public class UserController {
     }*/
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestParam(value = "name", required=true, defaultValue = "") String name,
-                                           @RequestParam(value = "id", required=true, defaultValue = "") String id,
-                                           @RequestParam(value = "username", required=true, defaultValue = "") String username,
-                                           @RequestParam(value = "password", required=true, defaultValue = "") String password){
-        Register register = new Register(name, id, username, password);
+    public ResponseEntity<String> register(@RequestBody Register register){
+        //Register register = new Register(name, id, username, password);
         return UserManager.registerUser(register) ? ResponseEntity.ok(Messages.OK.toString()) : ResponseEntity.badRequest().body(ErrorMessages.INVALID_USER.toString());
     }
 
