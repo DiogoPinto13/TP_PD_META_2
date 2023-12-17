@@ -98,11 +98,6 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Button>
-            <Button fx:id="listPresencesUser" focusTraversable="true" layoutX="212.0" layoutY="217.0" onAction="#PresencesUser" text="Consulta de presenças utilizadores">
-               <font>
-                  <Font name="System Bold" size="12.0" />
-               </font>
-            </Button>
             </children>
         </AnchorPane>
     </children>
