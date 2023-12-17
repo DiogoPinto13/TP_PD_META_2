@@ -67,7 +67,7 @@ public class gerarCodigoController {
     }
 
     public void Voltar(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/beginAdmin.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/beginAdmin.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

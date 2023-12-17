@@ -20,7 +20,6 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ConsultEventsController {
     private Stage stage;
@@ -56,7 +55,7 @@ public class ConsultEventsController {
         filtros.getSelectionModel().selectLast();
 
 
-        Image imageDecline = new Image(getClass().getResourceAsStream("resources/lupa2.gif"));
+        Image imageDecline = new Image(getClass().getResourceAsStream("/fxml/lupa2.gif"));
         //Image imagem = new Image(getClass().getResourceAsStream("resources/lupa1.png")); // 1
         ImageView visualizadorImagem = new ImageView(imageDecline); // 2
         visualizadorImagem.setFitWidth(20); // 3
@@ -112,7 +111,7 @@ public class ConsultEventsController {
 
             Parent root = null;
             try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../../../../resources/fxml/Admin/consultaPresencasEvento.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Admin/consultaPresencasEvento.fxml"));
 
                 loader.setControllerFactory(controllerClass -> {
                     if (controllerClass == ConsultPresencesUserController.class) {
@@ -147,54 +146,7 @@ public class ConsultEventsController {
     }
 
     public void Edit(ActionEvent actionEvent) throws IOException {
-        int i = tbEvento.getSelectionModel().getSelectedIndex();
 
-        if(i!=-1) {
-            Eventos eventos = (Eventos) tbEvento.getItems().get(i);
-            //verifica se o evento tem alguma presença registada
-            if (Objects.equals(Admin.CheckPresences(eventos.getDesignacao()), ErrorMessages.INVALID_REQUEST.toString())) {
-                Parent root = null;
-                try {
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("../../../../../../resources/fxml/Admin/editarEvento.fxml"));
-
-                    loader.setControllerFactory(controllerClass -> {
-                        if (controllerClass == EditEventController.class) {
-                            return new EditEventController(eventos.getDesignacao());
-                        } else {
-                            try {
-                                return controllerClass.newInstance();
-                            } catch (Exception e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    });
-
-                    root = loader.load();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-                stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-                preScene = stage.getScene();
-
-                scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
-
-            } else {
-                Alert alert = new Alert(Alert.AlertType.WARNING);
-                alert.setTitle("O evento não é alterável");
-                alert.setHeaderText(null);
-                alert.setContentText("Não é possível alterar o evento ou ocorreu um erro e não foi encontrado!");
-                alert.showAndWait();
-            }
-        }
-        else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Selecione um evento");
-            alert.setHeaderText(null);
-            alert.setContentText("Selecione uma linha da tabela!");
-            alert.showAndWait();
-        }
     }
 
     public void eliminate(ActionEvent actionEvent) {
@@ -204,7 +156,7 @@ public class ConsultEventsController {
             Eventos eventos = (Eventos) tbEvento.getItems().get(i);
 
 
-            if (Objects.equals(Admin.CheckPresences(eventos.getDesignacao()), ErrorMessages.INVALID_REQUEST.toString())) {
+            //if (Objects.equals(Admin.CheckPresences(eventos.getDesignacao()), ErrorMessages.INVALID_REQUEST.toString())) {
 
                 if (Admin.deleteEvent(eventos.getDesignacao()).equals(ErrorMessages.INVALID_EVENT_NAME.toString())) {
                     Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -259,13 +211,13 @@ public class ConsultEventsController {
                     alert.setContentText("Ocorreu um erro a eliminar o evento!");
                     alert.showAndWait();
                 }
-            } else {
+            /*} else {
                 Alert alert = new Alert(Alert.AlertType.WARNING);
                 alert.setTitle("Não é possivel eliminar o evento!");
                 alert.setHeaderText(null);
                 alert.setContentText("Não é possível eliminar o evento ou ocorreu um erro e não foi encontrado!");
                 alert.showAndWait();
-            }
+            }*/
         }
         else{
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -278,7 +230,7 @@ public class ConsultEventsController {
     }
 
     public void createEvent(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/criarEvento.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/criarEvento.fxml"));
         stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -326,7 +278,7 @@ public class ConsultEventsController {
     }
 
     public void voltar(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/beginAdmin.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/beginAdmin.fxml"));
         stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

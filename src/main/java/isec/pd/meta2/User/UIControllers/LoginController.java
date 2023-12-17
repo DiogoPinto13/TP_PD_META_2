@@ -1,18 +1,14 @@
 package isec.pd.meta2.User.UIControllers;
 
-import isec.pd.meta2.User.*;
-
 import isec.pd.meta2.Shared.ErrorMessages;
 import isec.pd.meta2.Shared.Login;
 import isec.pd.meta2.User.Client;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -79,7 +75,9 @@ public class LoginController {
 
             //vamos abrir uma connection especial pro admin
             //Admin.prepareAdmin();
-            Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/beginAdmin.fxml"));
+            //FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/Client/login.fxml"));
+
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/beginAdmin.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);

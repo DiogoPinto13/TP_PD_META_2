@@ -46,7 +46,7 @@ public class RegisterController {
 
         if(Client.setObjectRegister(register)){
             Client.setUsername(register.getUsername());
-            Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Client/beginClient.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/fxml/Client/beginClient.fxml"));
             stage = (Stage)((Node)event.getSource()).getScene().getWindow();
             scene = new Scene(root);
             stage.setScene(scene);
@@ -65,7 +65,7 @@ public class RegisterController {
 
     public void backLogin(ActionEvent event) throws IOException {
 
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Client/login.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Client/login.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);

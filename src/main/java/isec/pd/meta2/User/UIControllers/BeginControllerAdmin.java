@@ -23,7 +23,7 @@ public class BeginControllerAdmin {
     }
 
     public void Events(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/consultaEventosCriados.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/consultaEventosCriados.fxml"));
         stage = (Stage)((Node)actionEvent.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -31,12 +31,12 @@ public class BeginControllerAdmin {
     }
 
     public void sair(ActionEvent actionEvent) {
-        Admin.closeConnection();
+        //Admin.closeConnection();
         Platform.exit();
     }
 
     public void gerarCod(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/gerarCodigo.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/gerarCodigo.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
@@ -44,7 +44,7 @@ public class BeginControllerAdmin {
     }
 
     public void PresencesUser(ActionEvent event) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("../../../../../../resources/fxml/Admin/consultaEventosUser.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/Admin/consultaEventosUser.fxml"));
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
         stage.setScene(scene);
