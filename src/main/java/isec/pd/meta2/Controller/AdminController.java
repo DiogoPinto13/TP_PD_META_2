@@ -25,9 +25,9 @@ public class AdminController {
         if(role.equalsIgnoreCase("ADMIN")){
             EventResult eventResult;
             ArrayList<Pair<String, String>> parametros = new ArrayList<>();
-            parametros.add(new Pair<>("timeBegin", timeBegin));
-            parametros.add(new Pair<>("timeEnd", timeEnd));
-            parametros.add(new Pair<>("eventDesignation", eventDesignation));
+            parametros.add(new Pair<>("horaInicio", timeBegin));
+            parametros.add(new Pair<>("horaFim", timeEnd));
+            parametros.add(new Pair<>("designacao", eventDesignation));
             parametros.add(new Pair<>("place", place));
 
             Optional<Pair<String, String>> option = parametros.stream()
@@ -35,6 +35,7 @@ public class AdminController {
                     .findFirst();
             if (option.isPresent()) {
                 Pair<String, String> pair = option.get();
+                pair.second = pair.second.replace('+', ' ');
                 //nome da opcao, opcao
                 eventResult = EventManager.queryEventsFilters(pair.first, pair.second);
             } else {

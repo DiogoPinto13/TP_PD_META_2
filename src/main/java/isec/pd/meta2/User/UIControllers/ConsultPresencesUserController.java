@@ -57,7 +57,7 @@ public class ConsultPresencesUserController {
 
     public void initialize(){
         //pra nao adicionar mais um endpoint vamos usar a função que já temos com filtro e passamos a designação do evento
-        EventResult eventResultInfo = Admin.queryEvents("designacao", designacao);
+        EventResult eventResultInfo = Admin.queryEvents("eventDesignation", designacao);
         //só irá dar um único resultado
         String a = eventResultInfo.events.get(0);
         if(a.equals(ErrorMessages.INVALID_EVENT_NAME))

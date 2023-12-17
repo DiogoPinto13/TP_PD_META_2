@@ -99,6 +99,19 @@ public class Client {
         Pair<String, Integer> pair = new Pair<>(responseBody, responseCode);
         return pair;
     }
+    public static EventResult getAllEventsWithFilter(String url, String authorizationValue, String filterType, String filterValue) throws IOException {
+
+        filterValue = filterValue.replace(' ', '+');
+        String queryParams = String.format("?%s=%s", filterType, filterValue);
+
+        String fullUrl = url + queryParams;
+
+        String verb = "GET";
+        String body = null;
+
+        String response = sendRequestAndShowResponse(fullUrl, verb, authorizationValue, body).first;
+        return convertJsonToEventResult(response);
+    }
 
     private static EventResult convertJsonToEventResult(String json) {
         Gson gson = new Gson();

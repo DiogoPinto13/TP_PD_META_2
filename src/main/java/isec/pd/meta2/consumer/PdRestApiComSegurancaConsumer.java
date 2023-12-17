@@ -66,22 +66,16 @@ public class PdRestApiComSegurancaConsumer {
     private static void getAllEventsWithFilter(String authorizationValue, String filterType, String filterValue) throws IOException {
         String url = "http://localhost:8080" + "/events";
 
-        // Create the query parameter based on the filter type
         String queryParams = String.format("?%s=%s", filterType, filterValue);
 
-        // Build the complete URI
         String fullUrl = url + queryParams;
 
-        // Set up your HTTP request parameters
         String verb = "GET";
-        String body = null; // No request body for GET requests
+        String body = null;
 
-        // Send the request and show the response
         String response = sendRequestAndShowResponse(fullUrl, verb, authorizationValue, body);
         EventResult eventResult = convertJsonToEventResult(response);
         System.out.println(eventResult.getColumns());
-        // Handle the response as needed
-        //System.out.println("Get All Events Response with " + filterType + ": " + response);
     }
     private static EventResult convertJsonToEventResult(String json) {
         Gson gson = new Gson();

@@ -250,7 +250,7 @@ public class ConsultEventsController {
             if(!filtro.getText().equals("")) {
                 if (selectedType.equals("Designação")) {
                     dataEventos.clear();
-                    EventResult eventResult = Admin.queryEvents("designacao", filtro.getText());
+                    EventResult eventResult = Admin.queryEvents("eventDesignation", filtro.getText());
                     preencheTabela(eventResult);
                 } else if (selectedType.equals("Local")) {
                     dataEventos.clear();
@@ -258,11 +258,11 @@ public class ConsultEventsController {
                     preencheTabela(eventResult);
                 } else if (selectedType.equals("Inicio")) {
                     dataEventos.clear();
-                    EventResult eventResult = Admin.queryEvents("horaInicio", filtro.getText());
+                    EventResult eventResult = Admin.queryEvents("timeBegin", filtro.getText());
                     preencheTabela(eventResult);
                 } else if (selectedType.equals("Fim")) {
                     dataEventos.clear();
-                    EventResult eventResult = Admin.queryEvents("horaFim", filtro.getText());
+                    EventResult eventResult = Admin.queryEvents("timeEnd", filtro.getText());
                     preencheTabela(eventResult);
                 }
             }

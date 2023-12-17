@@ -13,8 +13,7 @@ import java.net.SocketTimeoutException;
 import java.util.HashMap;
 import java.util.Map;
 
-import static isec.pd.meta2.User.Client.sendRequestAndShowResponse;
-import static isec.pd.meta2.User.Client.token;
+import static isec.pd.meta2.User.Client.*;
 
 public class Admin {
 
@@ -99,17 +98,8 @@ public class Admin {
     }
 
     public static EventResult queryEvents(String column, String text ){
-        EventResult eventResult;
-
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put(column, text);
-        Gson gson = new Gson();
-        String requestBody = gson.toJson(requestData);
-
         try{
-            String body = sendRequestAndShowResponse("http://localhost:8080/events", "GET", "bearer " + token, requestBody).first;
-            eventResult = gson.fromJson(body, EventResult.class);
-            return eventResult;
+            return getAllEventsWithFilter("http://localhost:8080/events", "bearer " + token, column, text);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -163,6 +153,7 @@ public class Admin {
         return null;
     }*/
     public static EventResult getPresencesEvent(String designacao) {
+        designacao = designacao.replace(' ', '+');
         String uri = "http://localhost:8080/events/presences/" + designacao;
         EventResult eventResult;
         Gson gson = new Gson();
