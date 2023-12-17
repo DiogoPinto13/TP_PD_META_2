@@ -203,11 +203,15 @@ public class Client {
     public static boolean sendCode(String code) {
         //envia o codigo, username
         //Pair<String, Integer> responsePair;
-        Map<String, String> requestData = new HashMap<>();
-        requestData.put("presenceCode", code);
-        requestData.put("username", username);
+        //Map<String, String> requestData = new HashMap<>();
+        //requestData.put("presenceCode", code);
+        //requestData.put("username", username);
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(username).append(",").append(code);
+        String args = stringBuilder.toString();
+
         Gson gson = new Gson();
-        String requestBody = gson.toJson(requestData);
+        String requestBody = gson.toJson(args).replace("\"", "");
 
         try {
             return sendRequestAndShowResponse("http://localhost:8080/codEvent", "POST", "bearer " + token, requestBody).first.equals(Messages.REGISTER_PRESENCE_CODE.toString());

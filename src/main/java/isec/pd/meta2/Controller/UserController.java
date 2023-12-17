@@ -8,10 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -37,11 +34,11 @@ public class UserController {
 
     @PostMapping("/codEvent")
     public ResponseEntity<String> registerUserInEvent(@AuthenticationPrincipal Jwt principal,
-                                                      @RequestParam(value = "presenceCode", required = true, defaultValue = "") String presenceCode,
-                                                      @RequestParam(value = "username", required=true, defaultValue = "") String username){
+                                                      @RequestBody String args){
+        String[] argsEvent = args.split(",");
         String role = principal.getClaimAsString("scope");
         if(role.equalsIgnoreCase("USER")){
-            return (EventManager.registerUserInEvent(username, Integer.parseInt(presenceCode))) ? ResponseEntity.ok(Messages.REGISTER_PRESENCE_CODE.toString()) : ResponseEntity.badRequest().body(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
+            return (EventManager.registerUserInEvent(argsEvent[0], Integer.parseInt(argsEvent[1]))) ? ResponseEntity.ok(Messages.REGISTER_PRESENCE_CODE.toString()) : ResponseEntity.badRequest().body(ErrorMessages.FAIL_REGISTER_PRESENCE_CODE.toString());
         }
         return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Access denied!");
     }
