@@ -141,7 +141,6 @@ public class RestServer {
 			return;
 		}
 		serverMain.start();
-
 		//DatabaseManager.connect("Database");
 		SpringApplication.run(TpPdMeta2Application.class);
 		try{
